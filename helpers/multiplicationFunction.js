@@ -1,0 +1,6 @@
+function multiplication(a, b) {
+    const result = a * b;
+    return result;
+}
+
+module.exports = multiplication;
