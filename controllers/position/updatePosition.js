@@ -1,0 +1,71 @@
+const { Projects } = require("../../models/estimate");
+const multiplication = require("../../helpers/multiplicationFunction");
+const sumDataForDelete = require("../../helpers/sumForDelete");
+const sumEstimate = require("../../helpers/sumEstimateFunction");
+
+const update = async (req, res) => {
+    
+    const { projectId, estimateId, positionId } = req.params;
+    const {title, unit, number, price} = req.body; 
+
+const updatePosition = {title, unit, number, price, result: multiplication(number, price)}
+  
+let newData = null;
+let newPositionsArr = null;
+let totalPositions = 0;
+
+
+    const projectsArr = await Projects.find();
+
+    for(let i = 0; i < projectsArr.length; i++) {
+        if(projectsArr[i]._id.toString() === projectId) {
+            const estimatesArr = projectsArr[i].estimates;
+            estimatesArr.forEach((value, key) => {
+                if(estimatesArr[key]._id.toString() === estimateId) {
+
+                    const positionArr = estimatesArr[key].positions;
+
+                    positionArr.forEach((value, key) => {
+                        if(positionArr[key].id === positionId) {
+                            positionArr[key].title = updatePosition.title;
+                            positionArr[key].unit = updatePosition.unit;
+                            positionArr[key].number = updatePosition.number;
+                            positionArr[key].price = updatePosition.price;
+                            positionArr[key].result = updatePosition.result;
+                            totalPositions = sumDataForDelete(positionArr);
+                            newPositionsArr  = positionArr;  
+                        }
+                    })
+
+                    estimatesArr[key].positions = newPositionsArr;
+                    estimatesArr[key].total = totalPositions
+                    newData = estimatesArr;
+
+                }
+            })
+
+        }
+    }
+
+    console.log(newData)
+
+
+    try {
+ const updateEstimate = await Projects.findByIdAndUpdate(projectId, { $set: { estimates: newData} },{ new: true });
+    
+    
+          
+      const estimatesArray = await Projects.findById(projectId);
+      const totalSum = sumEstimate(estimatesArray)
+          
+    const updateSum = await Projects.findByIdAndUpdate(projectId, { $set: { total: totalSum } }, { new: true })
+        res.status(201).json(newData);
+       } catch (error) {
+        console.error('Error adding positions:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+       }
+       
+}
+
+module.exports = update;
+
