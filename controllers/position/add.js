@@ -4,6 +4,7 @@ const multiplication = require("../../helpers/multiplicationFunction")
 const sumData = require("../../helpers/sumFunction");
 const sumEstimate = require("../../helpers/sumEstimateFunction");
 
+
 const add = async (req, res) => {
 
     const {position} = req.body;
@@ -55,6 +56,8 @@ const add = async (req, res) => {
   const totalSum = sumEstimate(estimatesArray)
       
 const updateSum = await Projects.findByIdAndUpdate(projectId, { $set: { total: totalSum } }, { new: true })
+
+
     res.status(201).json(newEstimate);
    } catch (error) {
     console.error('Error adding positions:', error);
