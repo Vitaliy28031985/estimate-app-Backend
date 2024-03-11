@@ -14,8 +14,6 @@ const update = async (req, res) => {
 
     const materialsArr = project.materials;
         
-        // console.log(material);
-
         for(let i = 0; i < materialsArr.length; i++) {
             if(materialsArr[i].id === materialsId) {
                 newMaterialsList.push({id: materialsArr[i].id, _id: materialsArr[i]._id, ...material })
