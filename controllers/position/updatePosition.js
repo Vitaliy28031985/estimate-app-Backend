@@ -2,6 +2,7 @@ const { Projects } = require("../../models/estimate");
 const multiplication = require("../../helpers/multiplicationFunction");
 const sumDataForDelete = require("../../helpers/sumForDelete");
 const sumEstimate = require("../../helpers/sumEstimateFunction");
+const getGeneral = require("../../helpers/getGeneralFunction");
 
 const update = async (req, res) => {
     
@@ -53,13 +54,19 @@ let totalPositions = 0;
     try {
  const updateEstimate = await Projects.findByIdAndUpdate(projectId, { $set: { estimates: newData} },{ new: true });
     
-    
           
       const estimatesArray = await Projects.findById(projectId);
       const totalSum = sumEstimate(estimatesArray)
           
     const updateSum = await Projects.findByIdAndUpdate(projectId, { $set: { total: totalSum } }, { new: true })
-        res.status(201).json(newData);
+       
+    const generalArray = await Projects.findById(projectId);
+
+    const generalResult = getGeneral(generalArray.total, generalArray.materialsTotal, generalArray.advancesTotal);
+    
+    const updateGeneral = await Projects.findByIdAndUpdate(projectId, { $set: { general: generalResult } }, { new: true })
+    
+    res.status(201).json(newData);
        } catch (error) {
         console.error('Error adding positions:', error);
         res.status(500).json({ message: 'Internal Server Error' });

@@ -9,6 +9,8 @@ const estimatesRouter = require("./routes/api/estimates");
 const positionRouter = require("./routes/api/position");
 const projectsRouter = require("./routes/api/projects");
 const priceRouter = require("./routes/api/price");
+const materialsRouter = require("./routes/api/materials");
+const advancesRouter = require("./routes/api/advances");
 
 dotenv.config();
 
@@ -19,6 +21,8 @@ app.use('/api/estimates', estimatesRouter);
 app.use('/api/position', positionRouter);
 app.use('/api/projects', projectsRouter);
 app.use('/api/price', priceRouter);
+app.use('/api/materials', materialsRouter);
+app.use('/api/advances', advancesRouter);
 
 app.use((req, res) => {
     res.status(404).json({
