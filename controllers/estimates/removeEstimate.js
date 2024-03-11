@@ -1,6 +1,6 @@
 const { Projects } = require("../../models/estimate");
 const sumEstimate = require("../../helpers/sumEstimateFunction");
-
+const getGeneral = require("../../helpers/getGeneralFunction");
 
 
 const removeEstimate = async (req, res) => {
@@ -32,7 +32,12 @@ const removeEstimate = async (req, res) => {
             
       const updateSum = await Projects.findByIdAndUpdate(projectId, { $set: { total: totalSum } }, { new: true })
     
-    
+      const generalArray = await Projects.findById(projectId);
+
+      const generalResult = getGeneral(generalArray.total, generalArray.materialsTotal, generalArray.advancesTotal);
+      
+      const updateGeneral = await Projects.findByIdAndUpdate(projectId, { $set: { general: generalResult } }, { new: true })
+
        res.status(200).json(updateEstimate);
        } catch (error) {
         console.error('Error adding positions:', error);

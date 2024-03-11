@@ -1,6 +1,7 @@
 const { Projects } = require("../../models/estimate");
 const sumEstimate = require("../../helpers/sumEstimateFunction");
 const sumDataForDelete = require("../../helpers/sumForDelete");
+const getGeneral = require("../../helpers/getGeneralFunction");
 
 const removePosition = async (req, res) => {
     const { projectId, estimateId, positionId } = req.params;
@@ -52,6 +53,13 @@ const removePosition = async (req, res) => {
       const totalSum = sumEstimate(estimatesArray)
           
     const updateSum = await Projects.findByIdAndUpdate(projectId, { $set: { total: totalSum } }, { new: true })
+
+    const generalArray = await Projects.findById(projectId);
+
+    const generalResult = getGeneral(generalArray.total, generalArray.materialsTotal, generalArray.advancesTotal);
+    
+    const updateGeneral = await Projects.findByIdAndUpdate(projectId, { $set: { general: generalResult } }, { new: true })
+
         res.status(201).json(nawData);
        } catch (error) {
         console.error('Error delete positions:', error);

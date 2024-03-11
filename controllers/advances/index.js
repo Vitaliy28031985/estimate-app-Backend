@@ -1,3 +1,3 @@
-const add = require("./advances");
+const add = require("./add");
 
 module.exports = {add};
