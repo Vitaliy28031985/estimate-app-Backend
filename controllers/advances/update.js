@@ -20,8 +20,7 @@ const update = async (req, res) => {
             } else {
                 newAdvancesList.push({id: advancesArr[i].id,
                     _id: advancesArr[i]._id,
-                    title: advancesArr[i].title,
-                    order: advancesArr[i].order,
+                    order: advancesArr[i].comment,
                     date: advancesArr[i].date,
                     sum: advancesArr[i].sum
                    })

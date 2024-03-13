@@ -17,7 +17,7 @@ const newAdvances = project.advances;
 
     newAdvances.push({
             id: newId,
-            comment: advance.title,
+            comment: advance.comment,
             date: advance.date,
             sum: advance.sum
     });
