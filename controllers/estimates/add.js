@@ -1,12 +1,21 @@
-const { Estimate, Projects } = require('../../models/estimate');
+const { Projects } = require('../../models/estimate');
+const {User} = require("../../models/user");
 
 const add = async (req, res) => {
+
+    const { _id } = req.user;
+    const user = await User.findById(_id);
+  
+    if(user.role === "customer") {
+      return res.status(403).json({ message: "У вас не має прав для здійснення операції" });
+    }
+
+
     try { 
     const { estimates } = req.body;
     const { projectId } = req.params
 
-    console.log(estimates);
-        
+            
     const estimatesNew = {
         title: estimates.title,
     }
@@ -21,8 +30,7 @@ const add = async (req, res) => {
         
   }
 
-    // const result = await Estimate.create(body);
-     
+        
 }
 
 module.exports = add

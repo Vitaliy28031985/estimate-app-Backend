@@ -1,9 +1,17 @@
 const { Projects } = require("../../models/estimate");
+const {User} = require("../../models/user");
 const sumMaterials = require("../../helpers/sumMaterialsFunction");
 const getGeneral = require("../../helpers/getGeneralFunction");
 
 const remove = async (req, res) => {
+   
     const { _id } = req.user;
+    const user = await User.findById(_id);
+  
+    if(user.role === "customer") {
+      return res.status(403).json({ message: "У вас не має прав для здійснення операції" });
+    }
+
     const {projectId, advancesId} = req.params;
    
 

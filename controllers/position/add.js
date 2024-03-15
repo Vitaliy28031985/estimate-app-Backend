@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const { Projects } = require("../../models/estimate");
+const {User} = require("../../models/user");
 const multiplication = require("../../helpers/multiplicationFunction")
 const sumData = require("../../helpers/sumFunction");
 const sumEstimate = require("../../helpers/sumEstimateFunction");
@@ -7,10 +8,20 @@ const getGeneral = require("../../helpers/getGeneralFunction");
 
 
 const add = async (req, res) => {
+  
+  const { _id } = req.user;
+  const user = await User.findById(_id);
+
+  if(user.role === "customer") {
+    return res.status(403).json({ message: "У вас не має прав для здійснення операції" });
+  }
+
+ 
 
   const {position} = req.body;
   const {positionId, projectId} = req.params
   const newId = uuidv4();
+
   const positionNew = {
       id: newId,
       title: position.title,
