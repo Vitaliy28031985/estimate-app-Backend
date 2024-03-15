@@ -20,6 +20,12 @@ password: {
     minlength: 6,
     required: true
  },
+ role: {
+    type: String,
+    enum: ["executor", "customer", "admin"],
+    required: [true, 'Role is required'],
+ },
+ projectIds: [{ type: Schema.Types.ObjectId, ref: 'projects' }],
  token: {
     type: String,
     default: null
