@@ -1,7 +1,7 @@
 const {User} = require("../../models/user");
 const { Projects } = require("../../models/estimate");
 
-const addProject = async (req, res) => {
+const deleteProject = async (req, res) => {
     const { _id } = req.user;
     const {projectId} = req.params; 
     const emailCurrent = req.body;
@@ -11,15 +11,17 @@ const addProject = async (req, res) => {
      
     const user = await User.find();
     const currentUser = user.filter(({email}) => email === emailCurrent.email);
-    currentUser[0].projectIds.push(projectId);
-    project.allowList.push(currentUser[0]._id);
     
+     const newProjectIds = currentUser[0].projectIds.filter(item => item.toString() !== projectId);
 
- 
+     const newAllowList = project.allowList.filter(item => item.toString() !== currentUser[0]._id.toString());
+     
+
+  
     try {
-    const addAllow = await Projects.findByIdAndUpdate(projectId, { $set: { allowList: project.allowList } },{ new: true })  
-    const AddProjectId = await User.findByIdAndUpdate(currentUser[0]._id, { $set: { projectIds: currentUser[0].projectIds } },{ new: true });
-    res.status(201).json(currentUser[0].projectIds);
+    const addAllow = await Projects.findByIdAndUpdate(projectId, { $set: { allowList: newAllowList } },{ new: true })  
+    const AddProjectId = await User.findByIdAndUpdate(currentUser[0]._id, { $set: { projectIds: newProjectIds } },{ new: true });
+    res.status(201).json(newProjectIds);
     } catch (error) {
         console.error('Error adding projectIds:', error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -30,4 +32,4 @@ const addProject = async (req, res) => {
    
 }
 
-module.exports = addProject;
+module.exports = deleteProject;

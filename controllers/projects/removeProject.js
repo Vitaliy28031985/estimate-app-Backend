@@ -9,10 +9,22 @@ const removeProject = async (req, res) => {
     if(user.role === "customer") {
       return res.status(403).json({ message: "У вас не має прав для здійснення операції" });
     }
+    
+    const {projectId} = req.params; 
+    const project = await Projects.findById({ owner: _id, _id: projectId },
+      '-createdAt -updatedAt');
   
 
-    const {projectId} = req.params; 
+    const projectAllowList = project.allowList;
+    for(let i = 0; i < projectAllowList.length; i++) {
+      const userId = await User.findById(projectAllowList[i]);
+      const listId = userId.projectIds.filter(item => item.toString() !== projectId);
+      const updateProjectId = await User.findByIdAndUpdate(projectAllowList[i], { $set: { projectIds: listId } },{ new: true });
+      
+     
+    }
 
+ 
 
     try {
         const removeProject = await Projects.findOneAndDelete({owner: _id, _id: projectId });

@@ -41,6 +41,11 @@ const projectSchema = new Schema({
   materialsTotal: { type: Number, required: true, default: 0 },
   advancesTotal: { type: Number, required: true, default: 0 },
   general: { type: Number, required: true, default: 0 },
+  allowList: [{
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    default: []
+  }],
   owner: {
     type: Schema.Types.ObjectId,
     ref: 'user',
