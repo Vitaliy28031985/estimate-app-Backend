@@ -1,7 +1,15 @@
 const { Price } = require("../../models/price");
+const {User} = require("../../models/user");
 
 const update = async (req, res) => {
+    
     const { _id } = req.user;
+    const user = await User.findById(_id);
+  
+    if(user.role === "customer") {
+      return res.status(403).json({ message: "У вас не має прав для здійснення операції" });
+    }
+
     const { priceId } = req.params;
     const {body} = req;
 

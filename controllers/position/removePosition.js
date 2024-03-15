@@ -1,9 +1,18 @@
 const { Projects } = require("../../models/estimate");
+const {User} = require("../../models/user");
 const sumEstimate = require("../../helpers/sumEstimateFunction");
 const sumDataForDelete = require("../../helpers/sumForDelete");
 const getGeneral = require("../../helpers/getGeneralFunction");
 
 const removePosition = async (req, res) => {
+
+    const { _id } = req.user;
+    const user = await User.findById(_id);
+  
+    if(user.role === "customer") {
+      return res.status(403).json({ message: "У вас не має прав для здійснення операції" });
+    }
+
     const { projectId, estimateId, positionId } = req.params;
     let nawData = null;
     let estimatesArray = [];

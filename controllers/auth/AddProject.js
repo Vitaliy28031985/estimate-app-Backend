@@ -1,4 +1,3 @@
-// const { Projects } = require("../../models/estimate");
 const {User} = require("../../models/user");
 
 const addProject = async (req, res) => {
