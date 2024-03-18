@@ -3,7 +3,8 @@ const login = require("./login");
 const logout = require("./logout");
 const getCurrentUser = require("./getCurrentUser");
 const addProject = require("./AddProject");
-const deleteProject =require("./deleteProject");
+const deleteProject = require("./deleteProject");
+const getAll = require("./getAll");
 
 
 
@@ -13,5 +14,6 @@ module.exports = {
     logout,
     getCurrentUser,
     addProject,
-    deleteProject  
+    deleteProject,
+    getAll  
 }
