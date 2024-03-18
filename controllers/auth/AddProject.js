@@ -28,9 +28,7 @@ const addProject = async (req, res) => {
 
     const currentId = currentUser[0].projectIds.some(({_id}) => _id.toString() === projectId);
 
-    console.log(currentUser);
-
-    
+       
 
     if(currentId) {
         return res.status(403).json({ message: "Доступ до цього кошторису цьому користувачу вже надано" });   
