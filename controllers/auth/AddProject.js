@@ -6,11 +6,34 @@ const addProject = async (req, res) => {
     const {projectId} = req.params; 
     const emailCurrent = req.body;
 
+    const user = await User.findById(_id);
+  
+    if(user.role === "customer") {
+      return res.status(403).json({ message: "У вас не має прав для здійснення операції" });
+    }
+
+
     const project = await Projects.findById({ owner: _id, _id: projectId },
         '-createdAt -updatedAt');
      
-    const user = await User.find();
-    const currentUser = user.filter(({email}) => email === emailCurrent.email);
+    const users = await User.find();
+
+    const currentUserEmail = users.findIndex(({email}) => email === emailCurrent.email);
+
+    if(currentUserEmail === -1) {
+        return res.status(403).json({ message: `Користувача з таким ${emailCurrent.email} не існує` }); 
+    }
+
+    const currentUser = users.filter(({email}) => email === emailCurrent.email);
+
+    const currentId = currentUser[0].projectIds.some(({_id}) => _id.toString() === projectId);
+
+       
+
+    if(currentId) {
+        return res.status(403).json({ message: "Доступ до цього кошторису цьому користувачу вже надано" });   
+    }
+   
     currentUser[0].projectIds.push(projectId);
     project.allowList.push(currentUser[0]._id);
     
