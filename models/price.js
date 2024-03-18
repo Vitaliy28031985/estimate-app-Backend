@@ -11,6 +11,16 @@ const priceSchema = new Schema({
       }
 }, {versionKey: false, timestamps: true});
 
-const Price = model('price', priceSchema);
+const unitsSchema = new Schema({
+  title: { type: String, required: true },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: true,
+  }
+}, {versionKey: false, timestamps: true});
 
-module.exports = { Price};
+const Price = model('price', priceSchema);
+const Units = model('units', unitsSchema);
+
+module.exports = { Price, Units};
