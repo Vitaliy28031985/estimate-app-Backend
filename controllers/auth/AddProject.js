@@ -7,21 +7,27 @@ const addProject = async (req, res) => {
     const emailCurrent = req.body;
 
     const user = await User.findById(_id);
+
+   
   
     if(user.role === "customer") {
-      return res.status(403).json({ message: "У вас не має прав для здійснення операції" });
+      return res.status(403).json({ message: "У вас не має прав для здійснення операції!" });
     }
 
 
     const project = await Projects.findById({ owner: _id, _id: projectId },
         '-createdAt -updatedAt');
+
+    if(user._id.toString() !== project.owner.toString()) {
+        return res.status(403).json({ message: "Ви не маєте прав для надання доступ іншим користувачам!" });
+    }
      
     const users = await User.find();
 
     const currentUserEmail = users.findIndex(({email}) => email === emailCurrent.email);
 
     if(currentUserEmail === -1) {
-        return res.status(403).json({ message: `Користувача з таким ${emailCurrent.email} не існує` }); 
+        return res.status(403).json({ message: `Користувача з таким ${emailCurrent.email} не існує!` }); 
     }
 
     const currentUser = users.filter(({email}) => email === emailCurrent.email);
