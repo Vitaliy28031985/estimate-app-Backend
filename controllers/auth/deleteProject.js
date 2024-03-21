@@ -14,6 +14,10 @@ const deleteProject = async (req, res) => {
 
     const project = await Projects.findById({ owner: _id, _id: projectId },
         '-createdAt -updatedAt');
+
+        if(user._id.toString() !== project.owner.toString()) {
+            return res.status(403).json({ message: "Ви не маєте прав для того щоб скасувати доступ іншим користувачам!" });
+        }
      
     const users = await User.find();
      
