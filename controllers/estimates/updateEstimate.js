@@ -16,19 +16,6 @@ const update = async (req, res) => {
     let newData = null;
 
     const projectsArr = await Projects.find();
-
-    const projectIdsArr = user?.projectIds.findIndex(({id}) => id.toString() === projectId);
-
-    if(projectIdsArr === -1) {
-     return res.status(403).json({ message: "У вас не має прав для здійснення операції" });
-    }
-   
-    const projectIdsArrFilter = user?.projectIds.filter(({id}) => id.toString() === projectId);
-   
-   if(projectIdsArrFilter[0].allowLevel === "read") {
-     return res.status(403).json({ message: "Вам надано права лише для перегляду цього кошторису" });
-   }
-
     for(let i = 0; i < projectsArr.length; i++) {
         if(projectsArr[i]._id.toString() === projectId) {
             const estimatesArray = projectsArr[i];

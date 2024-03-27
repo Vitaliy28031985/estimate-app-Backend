@@ -4,8 +4,7 @@ const { Projects } = require("../../models/estimate");
 const addProject = async (req, res) => {
     const { _id } = req.user;
     const {projectId} = req.params; 
-    const {email, allowLevel} = req.body;
-    const emailCurrent = email;
+    const emailCurrent = req.body;
 
     const user = await User.findById(_id);
 
@@ -25,15 +24,15 @@ const addProject = async (req, res) => {
      
     const users = await User.find();
 
-    const currentUserEmail = users.findIndex(({email}) => email === emailCurrent);
-    
+    const currentUserEmail = users.findIndex(({email}) => email === emailCurrent.email);
+
     if(currentUserEmail === -1) {
         return res.status(403).json({ message: `Користувача з таким ${emailCurrent.email} не існує!` }); 
     }
 
-    const currentUser = users.filter(({email}) => email === emailCurrent);
+    const currentUser = users.filter(({email}) => email === emailCurrent.email);
 
-    const currentId = currentUser[0].projectIds.some(({id}) => id.toString() === projectId);
+    const currentId = currentUser[0].projectIds.some(({_id}) => _id.toString() === projectId);
 
        
 
@@ -41,7 +40,7 @@ const addProject = async (req, res) => {
         return res.status(403).json({ message: "Доступ до цього кошторису цьому користувачу вже надано" });   
     }
    
-    currentUser[0].projectIds.push({id: projectId, allowLevel});
+    currentUser[0].projectIds.push(projectId);
     project.allowList.push(currentUser[0]._id);
     
 

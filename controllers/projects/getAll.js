@@ -12,7 +12,7 @@ const getAll = async (req, res) => {
 
     for(let i = 0; i < projectsIdList.length; i++) {
         
-        const projectsIdArrFilter = projectsAll.filter(({_id}) => _id.toString() === projectsIdList[i].id.toString())
+        const projectsIdArrFilter = projectsAll.filter(({_id}) => _id.toString() === projectsIdList[i].toString())
         projectsIdArr.push(projectsIdArrFilter[0]);
     }
 
