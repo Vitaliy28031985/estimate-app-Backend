@@ -21,6 +21,18 @@ const update = async (req, res) => {
     const project = await Projects.findById({ owner: _id, _id: projectId },
         '-createdAt -updatedAt');
 
+        const projectIdsArr = user?.projectIds.findIndex(({id}) => id.toString() === projectId);
+
+ if(projectIdsArr === -1) {
+  return res.status(403).json({ message: "У вас не має прав для здійснення операції" });
+ }
+
+ const projectIdsArrFilter = user?.projectIds.filter(({id}) => id.toString() === projectId);
+
+if(projectIdsArrFilter[0].allowLevel === "read") {
+  return res.status(403).json({ message: "Вам надано права лише для перегляду цього кошторису" });
+}
+
     const advancesArr = project.advances;
         
         for(let i = 0; i < advancesArr.length; i++) {
