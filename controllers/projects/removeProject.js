@@ -15,6 +15,18 @@ const removeProject = async (req, res) => {
       '-createdAt -updatedAt');
   
 
+      const projectIdsArr = user?.projectIds.findIndex(({id}) => id.toString() === projectId);
+
+ if(projectIdsArr === -1) {
+  return res.status(403).json({ message: "У вас не має прав для здійснення операції" });
+ }
+
+ const projectIdsArrFilter = user?.projectIds.filter(({id}) => id.toString() === projectId);
+
+if(projectIdsArrFilter[0].allowLevel === "read") {
+  return res.status(403).json({ message: "Вам надано права лише для перегляду цього кошторису" });
+}
+
     const projectAllowList = project.allowList;
     for(let i = 0; i < projectAllowList.length; i++) {
       const userId = await User.findById(projectAllowList[i]);
