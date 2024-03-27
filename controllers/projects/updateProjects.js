@@ -13,18 +13,6 @@ const update = async (req, res) => {
     const { projectId } = req.params;
     const {title, description} = req.body;
 
-    const projectIdsArr = user?.projectIds.findIndex(({id}) => id.toString() === projectId);
-
- if(projectIdsArr === -1) {
-  return res.status(403).json({ message: "У вас не має прав для здійснення операції" });
- }
-
- const projectIdsArrFilter = user?.projectIds.filter(({id}) => id.toString() === projectId);
-
-if(projectIdsArrFilter[0].allowLevel === "read") {
-  return res.status(403).json({ message: "Вам надано права лише для перегляду цього кошторису" });
-}
-
     try {
         const updateProject = await Projects.findByIdAndUpdate({owner: _id,  _id: projectId }, {title, description}, {new: true});
         res.status(200).json(updateProject);

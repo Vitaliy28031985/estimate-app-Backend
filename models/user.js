@@ -1,15 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 
-const allowSchema = Schema({
-  id: { type: Schema.Types.ObjectId, ref: 'projects' },
-  allowLevel: {
-    type: String,
-    enum: ["read", "write"],
-    required: [true, 'level is required'],
-  }
-})
-
 const userSchema = Schema({
 name: { 
     type: String, 
@@ -34,7 +25,7 @@ password: {
     enum: ["executor", "customer", "admin"],
     required: [true, 'Role is required'],
  },
- projectIds: [allowSchema],
+ projectIds: [{ type: Schema.Types.ObjectId, ref: 'projects' }],
  token: {
     type: String,
     default: null
