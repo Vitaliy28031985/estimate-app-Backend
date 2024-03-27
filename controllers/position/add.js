@@ -11,28 +11,16 @@ const add = async (req, res) => {
   
   const { _id } = req.user;
   const user = await User.findById(_id);
-  const {position} = req.body;
-  const {positionId, projectId} = req.params
-  const newId = uuidv4();
-  
 
   if(user.role === "customer") {
     return res.status(403).json({ message: "У вас не має прав для здійснення операції" });
   }
 
- const projectIdsArr = user?.projectIds.findIndex(({id}) => id.toString() === projectId);
+ 
 
- if(projectIdsArr === -1) {
-  return res.status(403).json({ message: "У вас не має прав для здійснення операції" });
- }
-
- const projectIdsArrFilter = user?.projectIds.filter(({id}) => id.toString() === projectId);
-
-if(projectIdsArrFilter[0].allowLevel === "read") {
-  return res.status(403).json({ message: "Вам надано права лише для перегляду цього кошторису" });
-}
-
-
+  const {position} = req.body;
+  const {positionId, projectId} = req.params
+  const newId = uuidv4();
 
   const positionNew = {
       id: newId,
@@ -74,27 +62,27 @@ for (let i = 0; i < estimatesArr.length; i++) {
 }
  
 
-// try {
+try {
  
-//   const updateEstimate = await Projects.findByIdAndUpdate(projectId, { $set: { estimates: newEstimate[0].estimates } },{ new: true });
+  const updateEstimate = await Projects.findByIdAndUpdate(projectId, { $set: { estimates: newEstimate[0].estimates } },{ new: true });
 
       
-//   const estimatesArray = await Projects.findById(projectId);
-//   const totalSum = sumEstimate(estimatesArray)
+  const estimatesArray = await Projects.findById(projectId);
+  const totalSum = sumEstimate(estimatesArray)
       
-// const updateSum = await Projects.findByIdAndUpdate(projectId, { $set: { total: totalSum } }, { new: true })
+const updateSum = await Projects.findByIdAndUpdate(projectId, { $set: { total: totalSum } }, { new: true })
 
-// const generalArray = await Projects.findById(projectId);
+const generalArray = await Projects.findById(projectId);
 
-// const generalResult = getGeneral(generalArray.total, generalArray.materialsTotal, generalArray.advancesTotal);
+const generalResult = getGeneral(generalArray.total, generalArray.materialsTotal, generalArray.advancesTotal);
 
-// const updateGeneral = await Projects.findByIdAndUpdate(projectId, { $set: { general: generalResult } }, { new: true })
+const updateGeneral = await Projects.findByIdAndUpdate(projectId, { $set: { general: generalResult } }, { new: true })
 
-//     res.status(201).json(newEstimate);
-//    } catch (error) {
-//     console.error('Error adding positions:', error);
-//     res.status(500).json({ message: 'Internal Server Error' });
-//    }
+    res.status(201).json(newEstimate);
+   } catch (error) {
+    console.error('Error adding positions:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+   }
    
 };
 
